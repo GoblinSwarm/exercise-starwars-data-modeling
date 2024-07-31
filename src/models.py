@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
@@ -46,13 +46,11 @@ class Favorite(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
     nature = Column(Enum(Nature), nullable=False)
-    planet_id = Column(Integer, ForeignKey('planet.id'), nullable=True)
-    character_id = Column(Integer, ForeignKey('character.id'), nullable=True)
+    planet_id = Column(Integer, ForeignKey('planet.id'), nullable=True, unique=True)  
+    character_id = Column(Integer, ForeignKey('character.id'), nullable=True, unique=True)
     user = relationship(User)
-    planet = relationship(Planet)
-    character = relationship(Character)
-
-
+    planet = relationship(Planet, uselist=False) 
+    character = relationship(Character, uselist=False)  
 ## Draw from SQLAlchemy base
 try:
     render_er(Base, 'diagram.png')
